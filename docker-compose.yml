@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  mysqldb:
+    image: "mysql:latest"
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_USER: aaroe
+      MYSQL_PASSWORD: myPassword
+      MYSQL_DATABASE: items
+    restart: unless-stopped
+#    ports:
+#      - "3306:3306"
+    networks:
+      spring_and_mysql:
+    volumes:
+      - data:/var/lib/mysql
+  backend:
+    build: ./
+    depends_on:
+      - mysqldb
+    ports:
+      - "8080:8080"
+    networks:
+      spring_and_mysql:
+    restart: on-failure
+
+volumes:
+  data:
+
+networks:
+  spring_and_mysql:
